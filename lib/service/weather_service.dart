@@ -1,18 +1,16 @@
 import 'dart:convert';
-
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-
 import '../model/weather_model.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherService{
-  static const URL = 'http://api.openweathermap.org/data/2.5/weather';
+  static const String URL = 'http://api.openweathermap.org/data/2.5/weather';
   final String apiKey;
 
   WeatherService(this.apiKey);
 
-  Future<Weather> getWeather(String cityName) async{
+  Future<Weather> getWeather(String cityName) async {
     final response = await http.get(Uri.parse('$URL?q=$cityName&lang=sp&appid=$apiKey&units=metric'));
     if (response.statusCode != 200) {
       throw Exception('Error al obtener el clima: ${response.statusCode}');
