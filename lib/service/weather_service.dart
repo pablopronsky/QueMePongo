@@ -13,7 +13,7 @@ class WeatherService{
   WeatherService(this.apiKey);
 
   Future<Weather> getWeather(String cityName) async{
-    final response = await http.get(Uri.parse('$URL?q=$cityName&appid=$apiKey&units=metric&lang=es'));
+    final response = await http.get(Uri.parse('$URL?q=$cityName&lang=sp&appid=$apiKey&units=metric'));
     if (response.statusCode != 200) {
       throw Exception('Error al obtener el clima: ${response.statusCode}');
     }
