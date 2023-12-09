@@ -26,8 +26,8 @@ class WeatherService{
     // busca permisos para acceder a la ubicación
     LocationPermission locationPermission = await Geolocator.checkPermission();
     // si no los consigue, vuelve a intentar
-    if(locationPermission == LocationPermission.denied) {
-      locationPermission = await Geolocator.checkPermission();
+    if(locationPermission != LocationPermission.whileInUse || locationPermission != LocationPermission.always) {
+      locationPermission = await Geolocator.requestPermission();
     }
     // accede a la ubicación del usuario
     Position userPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
