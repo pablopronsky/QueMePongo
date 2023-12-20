@@ -1,4 +1,3 @@
-import 'package:dev/pages/outfit_page.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/weather_page.dart';

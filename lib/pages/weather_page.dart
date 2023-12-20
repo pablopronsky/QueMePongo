@@ -96,6 +96,15 @@ class WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Center(child: Text('¿Qué me pongo?',
+        style: TextStyle(
+            color: Colors.white70,
+            fontWeight: FontWeight.bold),
+          )
+        ),
+        backgroundColor: Colors.deepPurple,
+      ),
       body: _weather == null
           ? _buildSplashScreen()
           : _buildWeatherContent(),
@@ -157,16 +166,14 @@ class WeatherPageState extends State<WeatherPage> {
                 visible: _weather?.temperature != null, // Solo mostrar el botón si la temperatura no es nula
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.deepPurple,
                     shape: const CircleBorder(), // Hacer el botón circular
                     minimumSize: const Size(150, 150), // Aumentar el tamaño mínimo del botón
                     padding: const EdgeInsets.all(20), // Establecer el color de los bordes celestes
                   ),
                   onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Outfit(_fetchWeather()))),
-                  child: const Text(
-                    'Ver outfits',
-                    style: TextStyle(fontSize: 24), // Aumentar el tamaño del texto en el botón
+                  child: const Text('Ver outfits',
+                    style: TextStyle(fontSize: 24, color: Colors.white70,fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
