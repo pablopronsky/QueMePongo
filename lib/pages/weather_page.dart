@@ -79,9 +79,6 @@ class WeatherPageState extends State<WeatherPage> {
     );
   }
 
-  // Aca segun si es día o noche, y la condicion meteorológica, te ayuda a elegir el outfit
-
-
   @override
   void initState() {
     super.initState();
@@ -112,11 +109,13 @@ class WeatherPageState extends State<WeatherPage> {
   }
 
   Widget _buildSplashScreen() {
-    return _isLoading
-        ? Center(
-      child: Lottie.asset('assets/hanger.json'),
-    )
-        : _buildWeatherContent();
+    if (_isLoading) {
+      return Center(
+        child: Lottie.asset('assets/hanger.json'),
+    );
+    } else {
+      return _buildWeatherContent();
+    }
   }
 
   Widget _buildWeatherContent() {
@@ -128,59 +127,81 @@ class WeatherPageState extends State<WeatherPage> {
             const Center(
               child: CircularProgressIndicator(),
             ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 24, bottom: 24),
-                child: Text(
-                  _weather?.cityName ?? "Buscando tu ubicación",
-                  style: const TextStyle(fontSize: 24),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 10),
-                  if (_weather?.temperature != null)
-                    Text(
-                      '${_weather?.temperature.round()}ºC',
-                      style: const TextStyle(fontSize: 40),
-                    ),
-                  const SizedBox(width: 10),
-                ],
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 35),
-                child: Text(
-                  _suggestedClothing,
-                  style: const TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              // Add SizedBox to create space
-              const SizedBox(height: 20),
-
-              Visibility(
-                visible: _weather?.temperature != null, // Solo mostrar el botón si la temperatura no es nula
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    shape: const CircleBorder(), // Hacer el botón circular
-                    minimumSize: const Size(150, 150), // Aumentar el tamaño mínimo del botón
-                    padding: const EdgeInsets.all(20), // Establecer el color de los bordes celestes
-                  ),
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Outfit(_fetchWeather()))),
-                  child: const Text('Ver outfits',
-                    style: TextStyle(fontSize: 24, color: Colors.white70,fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-
-            ],
-          ),
+          _buildWeatherDetails(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildWeatherDetails() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildCityName(),
+        _buildTemperature(),
+        _buildOutfitsButton(),
+      ],
+    );
+  }
+
+  Widget _buildCityName() {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.125,
+        bottom: 24,
+      ),
+      child: Text(
+        _weather?.cityName ?? "Buscando tu ubicación",
+        style: TextStyle(
+          fontSize: _weather?.cityName != null ? 50 : 25,
+          fontWeight: FontWeight.bold,
+          color: Colors.deepPurple,
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildTemperature() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(width: 10),
+        if (_weather?.temperature != null)
+          Text(
+            '${_weather?.temperature.round()}ºC',
+            style: const TextStyle(fontSize: 40),
+          ),
+        const SizedBox(width: 10),
+      ],
+    );
+  }
+
+  Widget _buildOutfitsButton() {
+    return Visibility(
+      visible: _weather?.temperature != null,
+      child: Container(
+        margin: const EdgeInsets.only(top: 100),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.deepPurple,
+            shape: const CircleBorder(),
+            minimumSize: const Size(150, 150),
+            padding: const EdgeInsets.all(20),
+          ),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Outfit(_fetchWeather())),
+          ),
+          child: const Text(
+            'Ver outfits',
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
     );
   }
