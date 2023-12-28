@@ -39,11 +39,8 @@ class WeatherPageState extends State<WeatherPage> {
     if (temperature < 15) return Colors.indigo;       // mucho frio   --> letra azul
     if (temperature < 25) return Colors.green;        // tiempo lindo --> letra verde
     if (temperature < 30) return Colors.amberAccent;  // calor        --> letra amarilla
-    if (temperature > 30) {
-      return Colors.redAccent;                        // mucho calor  --> letra roja
-    } else {
-      return Colors.black;                            // defaultea letras negras
-    }
+    if (temperature > 30) return Colors.redAccent;    // mucho calor  --> letra roja
+    return Colors.black;                               // defaultea letras negras
   }
 
   void showErrorDialog(BuildContext context, Exception e) {
@@ -64,7 +61,6 @@ class WeatherPageState extends State<WeatherPage> {
     Timer(const Duration(milliseconds: 4000), () {
       setState(() {
         _isLoading = false;
-        _buildSplashScreen();
         _fetchWeather();
       });
     });
@@ -80,16 +76,14 @@ class WeatherPageState extends State<WeatherPage> {
   }
 
   Widget _buildSplashScreen() {
-    if (_isLoading) {
-      return SizedBox.expand(
-        child: Lottie.asset(
-          'assets/loading_screen.json',
-          fit: BoxFit.contain,
-        ),
-      );
-    } else {
-      return _buildWeatherContent();
-    }
+    return _isLoading
+        ? SizedBox.expand(
+      child: Lottie.asset(
+        'assets/loading_screen.json',
+        fit: BoxFit.contain,
+      ),
+    )
+        : _buildWeatherContent();
   }
 
   Widget _buildWeatherContent() {

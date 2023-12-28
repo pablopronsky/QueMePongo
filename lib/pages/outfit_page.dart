@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -102,14 +103,22 @@ class _OutfitState extends State<Outfit> {
     }
   }
 
-  String _getAnimacion(mainCondition){
-    mainCondition = mainCondition.toLowerCase();
-    if (mainCondition == 'clear') return 'assets/soleado.json';
-    if (mainCondition == 'clouds') return 'assets/nublado.json';
-    if (mainCondition == 'rain' || mainCondition == 'shower rain' ||
-        mainCondition == 'atmosphere' || mainCondition == 'thunder storm') return 'assets/tormenta_electrica.json';
-    return 'assets/soleado.json';
+  String _getAnimacion(String mainCondition) {
+    switch (mainCondition) {
+      case 'clear':
+        return 'assets/soleado.json';
+      case 'clouds':
+        return 'assets/nublado.json';
+      case 'rain':
+      case 'shower rain':
+      case 'atmosphere':
+        return 'lluvia.json';
+      case 'thunder storm':
+        return 'assets/tormenta_electrica.json';
+      default:
+        return 'assets/soleado.json';
     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,10 +159,33 @@ class _OutfitState extends State<Outfit> {
   }
 
   Widget _buildWeatherAnimation() {
-    return Lottie.asset(
-      _getAnimacion(_weather?.mainCondition),
-      animate: true,
-    );
+    if (_weather == null) {
+      // Manejar el caso en que _weather es nulo
+      return const Center(
+        child: Text(
+          'Cargando datos del tiempo',
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+        ),
+      );
+    }
+    String mainCondition = _weather?.mainCondition?.toLowerCase() ?? 'clear';
+    String animationAsset = _getAnimacion(mainCondition);
+    try {
+      return Lottie.asset(
+        animationAsset,
+        animate: true,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error al cargar la animación: $e');
+      }
+      return const Center(
+        child: Text(
+          'Error al cargar la animación',
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.red),
+        ),
+      );
+    }
   }
 
   Widget _buildWeatherInfo() {
