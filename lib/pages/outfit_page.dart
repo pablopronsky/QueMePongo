@@ -103,7 +103,7 @@ class _OutfitState extends State<Outfit> {
   }
 
   String _getAnimacion(mainCondition){
-    mainCondition.toString().toLowerCase();
+    mainCondition = mainCondition.toLowerCase();
     if (mainCondition == 'clear') return 'assets/soleado.json';
     if (mainCondition == 'clouds') return 'assets/nublado.json';
     if (mainCondition == 'rain' || mainCondition == 'shower rain' ||
