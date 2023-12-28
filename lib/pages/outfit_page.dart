@@ -104,7 +104,7 @@ class _OutfitState extends State<Outfit> {
           Expanded(
             child:
             Lottie.asset(
-              'assets/splash.json',
+              'assets/shirt.json',
               animate: true,
             ),
           ),
