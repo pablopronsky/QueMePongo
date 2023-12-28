@@ -102,7 +102,6 @@ class _OutfitState extends State<Outfit> {
     }
   }
 
-
   String _getAnimacion(mainCondition){
     mainCondition.toString().toLowerCase();
     if (mainCondition == 'clear') return 'assets/soleado.json';
@@ -115,48 +114,65 @@ class _OutfitState extends State<Outfit> {
   @override
   Widget build(BuildContext context) {
     _fetchWeather();
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          '¿Qué me pongo?',
-          style: TextStyle(
-            color: Colors.white70,
-            fontWeight: FontWeight.bold,
-          ),
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      title: const Text(
+        '¿Qué me pongo?',
+        style: TextStyle(
+          color: Colors.white70,
+          fontWeight: FontWeight.bold,
         ),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Lottie.asset(
-              _getAnimacion(_weather?.mainCondition),
-              animate: true,
+      centerTitle: true,
+      backgroundColor: Colors.deepPurple,
+    );
+  }
+
+  Widget _buildBody() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(
+          child: _buildWeatherAnimation(),
+        ),
+        Expanded(
+          child: _buildWeatherInfo(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeatherAnimation() {
+    return Lottie.asset(
+      _getAnimacion(_weather?.mainCondition),
+      animate: true,
+    );
+  }
+
+  Widget _buildWeatherInfo() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (_weather == null)
+          const Center(
+            child: CircularProgressIndicator(),
+          )
+        else
+          Center(
+            child: Text(
+              _suggestedClothing,
+              style: const TextStyle(fontSize: 24, color: Colors.deepPurple, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
           ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (_weather == null)
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                else
-                  Center(
-                    child: Text(
-                      _suggestedClothing,
-                      style: const TextStyle(fontSize: 24, color: Colors.deepPurple),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
 }
