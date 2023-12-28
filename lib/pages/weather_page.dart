@@ -64,6 +64,7 @@ class WeatherPageState extends State<WeatherPage> {
     Timer(const Duration(milliseconds: 4000), () {
       setState(() {
         _isLoading = false;
+        _buildSplashScreen();
         _fetchWeather();
       });
     });
@@ -72,15 +73,6 @@ class WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text('¿Qué me pongo?',
-        style: TextStyle(
-            color: Colors.white70,
-            fontWeight: FontWeight.bold),
-          )
-        ),
-        backgroundColor: Colors.deepPurple,
-      ),
       body: _weather == null
           ? _buildSplashScreen()
           : _buildWeatherContent(),
@@ -89,11 +81,10 @@ class WeatherPageState extends State<WeatherPage> {
 
   Widget _buildSplashScreen() {
     if (_isLoading) {
-      return SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Lottie.asset('assets/splash.json'),
+      return SizedBox.expand(
+        child: Lottie.asset(
+          'assets/loading_screen.json',
+          fit: BoxFit.contain,
         ),
       );
     } else {
@@ -102,16 +93,30 @@ class WeatherPageState extends State<WeatherPage> {
   }
 
   Widget _buildWeatherContent() {
-    return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          if (_weather == null)
-            const Center(
-              child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            '¿Qué me pongo?',
+            style: TextStyle(
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
             ),
-          _buildWeatherDetails(),
-        ],
+          ),
+        ),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (_weather == null)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            _buildWeatherDetails(),
+          ],
+        ),
       ),
     );
   }
@@ -131,19 +136,18 @@ class WeatherPageState extends State<WeatherPage> {
     return Padding(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).size.height * 0.125,
-        bottom: 24,
+        bottom: 44,
       ),
       child: Text(
         _weather?.cityName ?? "Buscando tu ubicación",
         style: TextStyle(
-          fontSize: _weather?.cityName != null ? 50 : 25,
+          fontSize: _weather?.cityName != null ? 70 : 25,
           fontWeight: FontWeight.bold,
           color: Colors.deepPurple,
         ),
       ),
     );
   }
-
 
   Widget _buildTemperature() {
     return Row(
@@ -154,7 +158,8 @@ class WeatherPageState extends State<WeatherPage> {
           Text(
             '${_weather?.temperature.round()}ºC',
             style: TextStyle(
-              fontSize: 40,
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
               color: _getColor(_weather!.temperature),
             ),
           ),
