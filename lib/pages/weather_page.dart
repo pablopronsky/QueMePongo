@@ -79,6 +79,18 @@ class WeatherPageState extends State<WeatherPage> {
     );
   }
 
+  // elije color para la temperatura segun el calor que hace
+  Color _getColor(double temperature) {
+    if (temperature < 15) return Colors.indigo;       // mucho frio   --> letra azul
+    if (temperature < 25) return Colors.green;        // tiempo lindo --> letra verde
+    if (temperature < 30) return Colors.amberAccent;  // calor        --> letra amarilla
+    if (temperature > 30) {
+      return Colors.redAccent;                        // mucho calor  --> letra roja
+    } else {
+      return Colors.black;                            // defaultea letras negras
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -111,7 +123,7 @@ class WeatherPageState extends State<WeatherPage> {
   Widget _buildSplashScreen() {
     if (_isLoading) {
       return Center(
-        child: Lottie.asset('assets/hanger.json'),
+        child: Lottie.asset('assets/splash.json'),
     );
     } else {
       return _buildWeatherContent();
@@ -170,7 +182,10 @@ class WeatherPageState extends State<WeatherPage> {
         if (_weather?.temperature != null)
           Text(
             '${_weather?.temperature.round()}ºC',
-            style: const TextStyle(fontSize: 40),
+            style: TextStyle(
+              fontSize: 40,
+              color: _getColor(_weather!.temperature),
+            ),
           ),
         const SizedBox(width: 10),
       ],
