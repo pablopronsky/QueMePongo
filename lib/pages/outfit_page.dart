@@ -23,10 +23,11 @@ class _OutfitState extends State<Outfit> {
   try {
     final weather = await _weatherService.getWeather(cityName);
     setState(() {
-    _weather = weather;
-    _suggestedClothing = getSuggestedClothing(
-    temperature: weather.temperature,
-    mainCondition: weather.mainCondition.toLowerCase(),
+      _weather = weather;
+      _suggestedClothing = getSuggestedClothing(
+      temperature: weather.temperature,
+      mainCondition: weather.mainCondition.toLowerCase(),
+      humidity: weather.humidity,
     );
     });
   } catch (e) {
@@ -39,6 +40,7 @@ class _OutfitState extends State<Outfit> {
   String getSuggestedClothing({
     required double temperature,
     required String mainCondition,
+    required int humidity,
   }) {
     mainCondition.toLowerCase();
 
@@ -49,21 +51,21 @@ class _OutfitState extends State<Outfit> {
         } else if (temperature < 17) {
           return 'Frío, pero soleado, campera abrigada';
         } else if (temperature < 25) {
-          return 'Tiempo ideal, agarra un buzo liviano por las dudas';
+          return 'Tiempo ideal, pantalon largo y remera con buzo para cuando refresque. Si vas a estar al sol llevá protector solar';
         } else if (temperature < 30) {
-          return 'Hace calor, ropa fresca.';
+          return 'Hace calor, short y remera manga corta. Protector solar si o si.';
         } else {
           return 'Bienvenido al infierno';
         }
       case 'clouds':
         if (temperature < 10) {
-          return 'Mucho frío y nublado, abrigate mucho';
+          return 'Mucho frío y nublado, campera de invierno y gorro / guantes';
         } else if (temperature < 15) {
-          return 'Está fresco y nublado, abrigate bien';
+          return 'Está fresco y nublado, campera de invierno';
         } else if (temperature < 25) {
-          return 'Está lindo pero nublado, llevá campera livana por las dudas';
+          return 'Está lindo pero nublado, pantalon largo y remera. Buzo / campera para cuando refresque';
         } else if (temperature < 30) {
-          return 'Hace calor y seguro hay humedad, si no te tosquea lleva campera por las dudas';
+          return 'Hace calor y hay humedad, short y remera, opcional campera liviana por las dudas';
         } else {
           return 'Quedate abajo del aire salvo que sea obligatorio salir';
         }
@@ -72,15 +74,15 @@ class _OutfitState extends State<Outfit> {
       case 'atmosphere':
       case 'thunder storm':
         if (temperature < 5) {
-          return 'Hace mucho frío y esta lloviendo o va a llover, abrigate una banda';
+          return 'Hace mucho frío y esta lloviendo o va a llover, campera de invierno anti lluvia y paraguas';
         } else if (temperature < 15) {
-          return 'Está fresco y lloviendo, llevate una campera';
+          return 'Está fresco y lloviendo, llevate una campera abrigada y paraguas';
         } else if (temperature < 25) {
-          return 'Llueve y hay humedad, llevá campera livana o paraguas';
+          return 'Llueve y hay humedad, llevá campera livana y paraguas';
         } else if (temperature < 30) {
-          return 'Hace calor y hay humedad, F';
+          return 'Hace calor y hay humedad, remera y short comodos y frescos';
         } else {
-          return 'MEJOR MORIR QUE VIVIR ESTA HUMEDAD Y CALOR';
+          return 'MEJOR MORIR QUE VIVIR ESTA REALIDAD';
         }
       case 'snow':
         if (temperature < 0) {
@@ -89,7 +91,7 @@ class _OutfitState extends State<Outfit> {
           return 'Está nevando, llevá ropa abrigada y calzado adecuado';
         }
       case 'mist':
-        return 'Está brumoso, llevá un abrigo ligero y un paraguas';
+        return 'Hay neblina, llevá un abrigo ligero y un paraguas';
       case 'haze':
         return 'Está nublado y con neblina, llevá un abrigo ligero y un paraguas';
       case 'dust':
@@ -142,6 +144,7 @@ class _OutfitState extends State<Outfit> {
       centerTitle: true,
       backgroundColor: Colors.deepPurple,
     );
+
   }
 
   Widget _buildBody() {
@@ -168,7 +171,7 @@ class _OutfitState extends State<Outfit> {
         ),
       );
     }
-    String mainCondition = _weather?.mainCondition?.toLowerCase() ?? 'clear';
+    String mainCondition = _weather?.mainCondition.toLowerCase() ?? 'clear';
     String animationAsset = _getAnimacion(mainCondition);
     try {
       return Lottie.asset(
